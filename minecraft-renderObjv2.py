@@ -15,10 +15,18 @@ import datetime
 class MinecraftDrawing:
     def __init__(self, mc):
         self.mc = mc
+        self.data = {}
+
+    def draw(self):
+        print "Drawing"
+        print len(self.data)
+        for key in self.data:
+             d = self.data[key]
+             mc.setBlock(key[0],key[1],key[2],d[0],d[1])
 
     # draw point
     def drawPoint3d(self, x, y, z, blockType, blockData=None):
-        self.mc.setBlock(x,y,z,blockType,blockData)
+        self.data[int(x),int(y),int(z)] = [blockType,blockData]
         #print "x = " + str(x) + ", y = " + str(y) + ", z = " + str(z)
 
     # draws a face, when passed a collection of vertices which make up a polyhedron
@@ -401,7 +409,7 @@ if __name__ == "__main__":
 
     #Post a message to the minecraft chat window 
     mc.postToChat("Hi, Minecraft 3d model maker, www.stuffaboutcode.com")
-    
+
     # clear a suitably large area
     mc.setBlocks(CLEARAREA1.x, CLEARAREA1.y, CLEARAREA1.z, CLEARAREA2.x, CLEARAREA2.y, CLEARAREA2.z, block.AIR)
     time.sleep(10)
@@ -410,17 +418,20 @@ if __name__ == "__main__":
     # loop through faces
     for face in faces:
         faceVertices = []
-        
+
         # loop through vertex's in face and call drawFace function
         for vertex in face:
             #strip co-ords from vertex line
             vertexX, vertexY, vertexZ = getVertexXYZ(vertices[vertex[0]], COORDSSCALE, STARTCOORD, SWAPYZ)
 
             faceVertices.append(minecraft.Vec3(vertexX,vertexY,vertexZ))
-                   
+
         # draw the face
         mcDrawing.drawFace(faceVertices, materials[faceCount][0], materials[faceCount][1])
         faceCount = faceCount + 1
+
+    mc.postToChat("Sending blocks to Minecraft")
+    mcDrawing.draw()
 
     mc.postToChat("Model complete, www.stuffaboutcode.com")
 
