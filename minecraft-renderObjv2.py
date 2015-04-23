@@ -10,6 +10,8 @@ import minecraft.block as block
 import time
 #import datetime, to get the time!
 import datetime
+#import regular expressions for splitting lines
+import re
 
 # class to create 3d filled polygons
 class MinecraftDrawing:
@@ -185,7 +187,7 @@ def load_obj(filename, defaultBlock, materials) :
     fh = open(filename)
     for line in fh :
         if line[0] == '#' : continue
-        line = line.strip().split(' ')
+        line = re.split('\s+', line.strip())
         if line[0] == 'v' : #vertex
             V.append(line[1:])
         elif line[0] == 'vt' : #tex-coord
